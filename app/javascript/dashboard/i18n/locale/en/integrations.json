@@ -1298,7 +1298,6 @@
         "PLACEHOLDER": "Select an assistant"
       },
       "INSTALL_MANIFEST": {
-        "BUTTON": "Install manifest",
         "TITLE": "Install from GitHub",
         "DESCRIPTION": "Install a Captain toolset from a public GitHub repository.",
         "SOURCE_LABEL": "Toolset",
