@@ -340,12 +340,12 @@
 
 @media only screen and (min-width: 667px) {
   .woot-widget-holder {
-    border-radius: 16px;
-    bottom: 104px;
-    height: calc(90% - 64px - 20px);
-    max-height: 640px !important;
-    min-height: 250px !important;
-    width: 400px !important;
+    border-radius: 14px;
+    bottom: 92px;
+    height: calc(88% - 56px - 16px);
+    max-height: 540px !important;
+    min-height: 220px !important;
+    width: 360px !important;
   }
 }
 
