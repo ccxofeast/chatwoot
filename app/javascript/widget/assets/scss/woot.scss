@@ -123,6 +123,151 @@ select:not(.reset-base) {
   @apply [color-scheme:dark];
 }
 
+// VibeCraft Global widget theme. Keep this scoped to the widget root so the
+// dashboard and any host page styles remain unaffected.
+.vibecraft-widget {
+  --vc-surface: #ffffff;
+  --vc-surface-muted: #f5f5f7;
+  --vc-border: #d2d2d7;
+  --vc-border-soft: rgba(60, 60, 67, 0.16);
+  --vc-text: #1d1d1f;
+  --vc-text-muted: #6e6e73;
+  --vc-focus-ring: rgba(0, 113, 227, 0.18);
+
+  min-width: 0;
+  color: var(--vc-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue',
+    Arial, sans-serif;
+  letter-spacing: 0;
+
+  &.dark {
+    --vc-surface: #1c1c1e;
+    --vc-surface-muted: #2c2c2e;
+    --vc-border: #48484a;
+    --vc-border-soft: rgba(235, 235, 245, 0.16);
+    --vc-text: #f5f5f7;
+    --vc-text-muted: #a1a1a6;
+    --vc-focus-ring: rgba(10, 132, 255, 0.32);
+  }
+
+  .conversation--container,
+  .header-expanded,
+  .conversation--container ~ footer,
+  .conversation--container + footer {
+    background: var(--vc-surface);
+  }
+
+  .conversation--container {
+    scrollbar-color: var(--vc-border) transparent;
+    scrollbar-width: thin;
+  }
+
+  header {
+    border-bottom: 1px solid var(--vc-border-soft);
+    background: var(--vc-surface);
+  }
+
+  .header-expanded {
+    padding-top: 1.5rem;
+    padding-bottom: 1.25rem;
+  }
+
+  .conversation-wrap {
+    padding-top: 1.25rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .chat-bubble {
+    border: 1px solid var(--vc-border-soft);
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    line-height: 1.45;
+  }
+
+  .chat-bubble.agent {
+    background: var(--vc-surface-muted) !important;
+    color: var(--vc-text);
+  }
+
+  .chat-bubble.user {
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  .agent-message-wrap + .agent-message-wrap,
+  .user-message-wrap + .user-message-wrap {
+    margin-top: 0.25rem;
+  }
+
+  .agent-message-wrap + .user-message-wrap,
+  .user-message-wrap + .agent-message-wrap {
+    margin-top: 1rem;
+  }
+
+  .branding--link {
+    color: var(--vc-text-muted);
+    opacity: 1;
+    text-decoration: none;
+    transition: color 160ms ease, opacity 160ms ease;
+
+    &:hover {
+      color: var(--vc-text);
+      opacity: 1;
+    }
+  }
+
+  .branding--link img {
+    display: none;
+  }
+
+  footer {
+    border-top: 1px solid var(--vc-border-soft);
+    background: var(--vc-surface);
+    padding: 0.625rem 0.75rem 0.75rem;
+  }
+
+  footer > div:first-child {
+    margin-bottom: 0;
+  }
+
+  .chat-message--input,
+  .user-message-input {
+    background: var(--vc-surface-muted);
+    color: var(--vc-text);
+  }
+
+  .chat-message--input {
+    border: 1px solid var(--vc-border);
+    border-radius: 0.75rem;
+    box-shadow: none !important;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+
+    &.is-focused {
+      border-color: var(--widget-color, #0071e3);
+      box-shadow: 0 0 0 3px var(--vc-focus-ring) !important;
+    }
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--widget-color, #0071e3);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+}
+
 p code {
   @apply bg-n-slate-3 dark:bg-n-alpha-2 text-n-slate-11 text-sm inline-block rounded py-px px-1;
 }

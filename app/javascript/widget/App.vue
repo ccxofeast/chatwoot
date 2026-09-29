@@ -373,14 +373,14 @@ export default {
 <template>
   <div
     v-if="!conversationSize && isFetchingList"
-    class="flex items-center justify-center flex-1 h-full bg-n-background"
+    class="vibecraft-widget flex items-center justify-center flex-1 h-full bg-n-background"
     :class="{ dark: prefersDarkMode }"
   >
     <Spinner size="" />
   </div>
   <div
     v-else
-    class="flex flex-col justify-end h-full"
+    class="vibecraft-widget flex flex-col justify-end h-full"
     :class="{
       'is-mobile': isMobile,
       'is-widget-right': isRightAligned,
