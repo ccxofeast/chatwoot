@@ -26,8 +26,8 @@ const onBackButtonClick = () => {
 </script>
 
 <template>
-  <header class="flex justify-between w-full p-5 bg-n-background gap-2">
-    <div class="flex items-center">
+  <header class="flex min-w-0 justify-between w-full p-5 bg-n-background gap-2">
+    <div class="flex min-w-0 flex-1 items-center">
       <button
         v-if="showBackButton"
         class="px-2 ltr:-ml-3 rtl:-mr-3"
@@ -44,7 +44,7 @@ const onBackButtonClick = () => {
         :src="brandLogo"
         :alt="$t('BUBBLE.BRAND_NAME')"
       />
-      <div class="widget-header__details flex flex-col gap-1">
+      <div class="widget-header__details flex min-w-0 flex-1 flex-col gap-1">
         <div
           class="widget-header__title flex items-center text-base font-medium leading-4 text-n-slate-12"
         >
@@ -67,6 +67,6 @@ const onBackButtonClick = () => {
         </div>
       </div>
     </div>
-    <HeaderActions :show-popout-button="showPopoutButton" />
+    <HeaderActions class="shrink-0" :show-popout-button="showPopoutButton" />
   </header>
 </template>

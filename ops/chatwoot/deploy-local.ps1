@@ -32,6 +32,7 @@ $imageTag = "local-$revision-$timestamp"
 $image = "vibecraft/chatwoot:$imageTag"
 $batch = Join-Path ([IO.Path]::GetTempPath()) ("chatwoot-local-" + [guid]::NewGuid().ToString("N"))
 $imageArchive = Join-Path $batch "chatwoot.tar"
+$compressedArchive = Join-Path $batch "chatwoot.tar.gz"
 $readme = Join-Path $root "ops\chatwoot\README.md"
 $remote = "$SshUser@$Server"
 $remoteDir = "/tmp/chatwoot-local-$timestamp"
@@ -41,6 +42,7 @@ $sshArgs = @("-i", $SshKey, "-p", "$SshPort", "-o", "IdentitiesOnly=yes", "-o", 
 $scpArgs = @("-i", $SshKey, "-P", "$SshPort", "-o", "IdentitiesOnly=yes", "-o", "BatchMode=yes")
 
 try {
+    $releaseStarted = Get-Date
     if (-not (Test-Path -LiteralPath $SshKey)) {
         throw "SSH key not found: $SshKey"
     }
@@ -65,12 +67,22 @@ try {
     }
 
     Write-Host "Building $image ..."
+    $stageStarted = Get-Date
     Invoke-Native "docker" $buildArgs
+    $buildSeconds = ((Get-Date) - $stageStarted).TotalSeconds
+
+    $stageStarted = Get-Date
     Invoke-Native "docker" @("save", "-o", $imageArchive, $image)
+    Invoke-Native "tar.exe" @("-czf", $compressedArchive, "-C", $batch, "chatwoot.tar")
+    Remove-Item -LiteralPath $imageArchive -Force
+    $archiveMegabytes = (Get-Item -LiteralPath $compressedArchive).Length / 1MB
+    $packageSeconds = ((Get-Date) - $stageStarted).TotalSeconds
 
     Write-Host "Transferring image to $remote ..."
+    $stageStarted = Get-Date
     Invoke-Native "ssh" ($sshArgs + @($remote, "mkdir -p '$remoteDir'"))
-    Invoke-Native "scp" ($scpArgs + @($imageArchive, $readme, ($remote + ":" + $remoteDir + "/")))
+    Invoke-Native "scp" ($scpArgs + @($compressedArchive, $readme, ($remote + ":" + $remoteDir + "/")))
+    $transferSeconds = ((Get-Date) - $stageStarted).TotalSeconds
 
     $remoteScript = @'
 set -eu
@@ -82,6 +94,7 @@ image='__IMAGE__'
 test -r '__REMOTE_ENV__'
 test -r "$compose_file"
 cp -p "$compose_file" "$backup_file"
+tar -xzf "$tmp_dir/chatwoot.tar.gz" -C "$tmp_dir"
 docker load < "$tmp_dir/chatwoot.tar"
 
 sed -i -E "0,/^[[:space:]]+image: vibecraft\\/chatwoot:.*/s#^[[:space:]]+image:.*#    image: $image#" "$compose_file"
@@ -116,12 +129,16 @@ rm -rf "$tmp_dir"
     $remoteScript = $remoteScript.Replace("__IMAGE__", $image)
 
     Write-Host "Rolling out $image ..."
+    $stageStarted = Get-Date
     ($remoteScript -replace '\r\n', '\n') | & ssh @sshArgs $remote "sh"
     if ($LASTEXITCODE -ne 0) {
         throw "remote deployment failed with exit code $LASTEXITCODE"
     }
+    $serverSeconds = ((Get-Date) - $stageStarted).TotalSeconds
+    $totalSeconds = ((Get-Date) - $releaseStarted).TotalSeconds
 
     Write-Host "Chatwoot deployment completed: $image"
+    Write-Host ("Timing: build={0:n1}s package={1:n1}s transfer={2:n1}s server={3:n1}s total={4:n1}s archive={5:n1}MB" -f $buildSeconds, $packageSeconds, $transferSeconds, $serverSeconds, $totalSeconds, $archiveMegabytes)
 }
 finally {
     if (Test-Path -LiteralPath $batch) {

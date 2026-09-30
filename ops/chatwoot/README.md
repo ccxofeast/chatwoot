@@ -38,6 +38,10 @@ powershell -ExecutionPolicy Bypass -File .\ops\chatwoot\deploy-local.ps1 `
 6. Installs this README at `/opt/chatwoot/README.md` and removes the temporary
    transfer directory.
 
+The script prints separate timings for the Docker build, image packaging,
+compressed transfer, and server rollout. Keep the normal cache-enabled path for
+fast releases; `-NoCache` is only for diagnosing a broken build cache.
+
 The server does not need Docker Hub credentials, Infisical, Node, Ruby, or the
 source tree. Runtime secrets remain in `/etc/chatwoot/chatwoot.env` and are
 never copied to the workstation or committed to Git.
@@ -56,6 +60,14 @@ docker logs --tail=100 chatwoot-sidekiq-1
 The public URL is served through the existing reverse proxy or tunnel. A
 successful local `/health` response and running `rails`/`sidekiq` containers are
 the deployment gate.
+
+## Why a release can be slow
+
+The production asset step recompiles the widget and dashboard after source
+changes. A cache miss also reinstalls Ruby and JavaScript dependencies. The
+resulting image is large, so the local package and network transfer can be the
+second major cost. The release script now compresses the image archive before
+SCP and reports the exact time for each stage.
 
 ## Rollback
 

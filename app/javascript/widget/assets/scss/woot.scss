@@ -234,8 +234,8 @@ select:not(.reset-base) {
   }
 
   .widget-header__availability-slot {
-    block-size: 0.928125rem;
-    min-block-size: 0.928125rem;
+    block-size: 1.5625rem;
+    min-block-size: 1.5625rem;
     overflow: hidden;
   }
 
@@ -253,17 +253,19 @@ select:not(.reset-base) {
   }
 
   .widget-header__availability {
-    display: block;
-    min-block-size: 0.928125rem;
+    display: -webkit-box;
+    min-block-size: 1.5625rem;
     max-inline-size: 100%;
     color: var(--vc-text-subtle) !important;
-    font-size: 0.6875rem;
+    font-size: 0.625rem;
     font-weight: 400;
     letter-spacing: 0;
-    line-height: 1.35;
+    line-height: 1.25;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
+    text-wrap: pretty;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   .widget-intro__title {
@@ -497,6 +499,7 @@ select:not(.reset-base) {
     font-weight: 600;
     letter-spacing: 0.025em;
     line-height: 1.2;
+    transform: translateY(-0.25rem);
     transition:
       color 160ms ease,
       opacity 160ms ease;
