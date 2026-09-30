@@ -1,5 +1,7 @@
 <script>
-import { useBranding } from 'shared/composables/useBranding';
+import brandLogo from 'widget/assets/images/vibecraft-icon.svg';
+
+const WIDGET_BRAND_NAME = 'VibeCraft Care';
 
 const {
   LOGO_THUMBNAIL: logoThumbnail,
@@ -14,12 +16,6 @@ export default {
       default: false,
     },
   },
-  setup() {
-    const { replaceInstallationName } = useBranding();
-    return {
-      replaceInstallationName,
-    };
-  },
   data() {
     return {
       globalConfig: {
@@ -30,6 +26,11 @@ export default {
     };
   },
   computed: {
+    displayBrandName() {
+      return this.$te('BUBBLE.BRAND_NAME')
+        ? this.$t('BUBBLE.BRAND_NAME')
+        : WIDGET_BRAND_NAME;
+    },
     brandRedirectURL() {
       try {
         const referrerHost = this.$store.getters['appConfig/getReferrerHost'];
@@ -64,11 +65,11 @@ export default {
     >
       <img
         class="ltr:mr-1 rtl:ml-1 max-w-3 max-h-3"
-        :alt="globalConfig.brandName"
-        :src="globalConfig.logoThumbnail"
+        :alt="displayBrandName"
+        :src="brandLogo"
       />
       <span>
-        {{ replaceInstallationName($t('POWERED_BY')) }}
+        {{ displayBrandName }}
       </span>
     </a>
   </div>

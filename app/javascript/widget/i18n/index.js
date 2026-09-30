@@ -84,6 +84,7 @@ export default {
   uk,
   uz,
   vi,
+  zh: zh_CN,
   zh_CN,
   zh_TW,
 };

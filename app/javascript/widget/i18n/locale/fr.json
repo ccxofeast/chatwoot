@@ -55,13 +55,16 @@
     "BOT": "Bot"
   },
   "BUBBLE": {
+    "BRAND_NAME": "VibeCraft Care",
+    "WIDGET_WELCOME_TITLE": "Comment pouvons-nous vous aider ?",
+    "WIDGET_WELCOME_BODY": "Une équipe attentive vous accompagne pour vos commandes et votre suivi.",
     "LABEL": "Discutez avec nous"
   },
   "LANGUAGE_SELECTOR": {
     "LABEL": "Langue",
     "ARIA_LABEL": "Choisir la langue du chat"
   },
-  "POWERED_BY": "Équipe support vibecraft global",
+  "POWERED_BY": "VibeCraft Care",
   "EMAIL_PLACEHOLDER": "Veuillez saisir votre adresse de courriel",
   "CHAT_PLACEHOLDER": "Tapez votre message",
   "TODAY": "Aujourd'hui",

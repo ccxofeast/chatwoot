@@ -1,6 +1,9 @@
 :root {
   --b-100: #f2f3f7;
-  --s-700: #37546d;
+  --s-700: #2f5d73;
+  --vc-launcher: #2f5d73;
+  --vc-launcher-hover: #234b60;
+  --vc-launcher-shadow: rgba(35, 75, 96, 0.28);
 }
 
 .woot-widget-holder {
@@ -40,17 +43,18 @@
 }
 
 .woot-widget-bubble {
-  background: #1f93ff;
+  background: var(--vc-launcher);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 100px;
-  border-width: 0px;
-  bottom: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16) !important;
+  border-width: 1px;
+  bottom: 18px;
+  box-shadow: 0 10px 26px var(--vc-launcher-shadow) !important;
   cursor: pointer;
-  height: 64px;
+  height: 56px;
   padding: 0px;
   position: fixed;
   user-select: none;
-  width: 64px;
+  width: 56px;
   z-index: 2147483000 !important;
 }
 
@@ -69,18 +73,18 @@
 }
 
 .woot-widget-bubble.woot-widget-bubble--flat {
-  height: 56px;
-  width: 56px;
+  height: 52px;
+  width: 52px;
 }
 
 .woot-widget-bubble.woot-widget-bubble--flat svg {
-  margin: 16px !important;
+  margin: 14px !important;
 }
 
 .woot-widget-bubble.woot-widget-bubble--flat.woot--close::before,
 .woot-widget-bubble.woot-widget-bubble--flat.woot--close::after {
-  left: 28px;
-  top: 16px;
+  left: 26px;
+  top: 14px;
 }
 
 .woot-widget-bubble.unread-notification::after {
@@ -147,14 +151,14 @@
 }
 
 .woot-widget-bubble:hover {
-  background: #1f93ff;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  background: var(--vc-launcher-hover);
+  box-shadow: 0 12px 30px var(--vc-launcher-shadow) !important;
 }
 
 .woot-widget-bubble svg {
   all: revert;
   height: 24px !important;
-  margin: 20px !important;
+  margin: 16px !important;
   padding: 0 !important;
   width: 24px !important;
 }
@@ -181,10 +185,10 @@
   background-color: #fff;
   content: ' ';
   display: inline;
-  height: 24px;
-  left: 32px;
+  height: 20px;
+  left: 28px;
   position: absolute;
-  top: 20px;
+  top: 18px;
   width: 2px;
 }
 

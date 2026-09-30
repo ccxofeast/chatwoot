@@ -6,6 +6,7 @@ import ChatHeaderExpanded from '../ChatHeaderExpanded.vue';
 import configMixin from '../../mixins/configMixin';
 import { mapGetters } from 'vuex';
 import { IFrameHelper } from 'widget/helpers/utils';
+import { hasCjkCharacters, isLegacyStoreName } from 'widget/helpers/brandingHelper';
 
 export default {
   components: {
@@ -42,6 +43,26 @@ export default {
       return (
         this.channelConfig.welcomeTitle || this.channelConfig.welcomeTagline
       );
+    },
+    displayWebsiteName() {
+      const websiteName = this.channelConfig.websiteName;
+      return isLegacyStoreName(websiteName)
+        ? this.$t('BUBBLE.BRAND_NAME')
+        : websiteName;
+    },
+    displayWelcomeTitle() {
+      const welcomeTitle =
+        this.appConfig.welcomeTitle || this.channelConfig.welcomeTitle;
+      return isLegacyStoreName(welcomeTitle)
+        ? this.$t('BUBBLE.WIDGET_WELCOME_TITLE')
+        : welcomeTitle;
+    },
+    displayWelcomeBody() {
+      const welcomeBody =
+        this.appConfig.welcomeDescription || this.channelConfig.welcomeTagline;
+      return !welcomeBody || hasCjkCharacters(welcomeBody)
+        ? this.$t('BUBBLE.WIDGET_WELCOME_BODY')
+        : welcomeBody;
     },
     showBackButton() {
       return ['article-viewer', 'messages', 'prechat-form'].includes(
@@ -119,16 +140,14 @@ export default {
       >
         <ChatHeaderExpanded
           v-if="!isHeaderCollapsed"
-          :intro-heading="appConfig.welcomeTitle || channelConfig.welcomeTitle"
-          :intro-body="
-            appConfig.welcomeDescription || channelConfig.welcomeTagline
-          "
+          :intro-heading="displayWelcomeTitle"
+          :intro-body="displayWelcomeBody"
           :avatar-url="channelConfig.avatarUrl"
           :show-popout-button="appConfig.showPopoutButton"
         />
         <ChatHeader
           v-if="isHeaderCollapsed"
-          :title="channelConfig.websiteName"
+          :title="displayWebsiteName"
           :avatar-url="channelConfig.avatarUrl"
           :show-popout-button="appConfig.showPopoutButton"
           :available-agents="availableAgents"

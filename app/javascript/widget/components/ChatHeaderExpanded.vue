@@ -1,9 +1,9 @@
 <script setup>
 import HeaderActions from './HeaderActions.vue';
-import { computed } from 'vue';
 import { useMessageFormatter } from 'shared/composables/useMessageFormatter';
+import brandLogo from 'widget/assets/images/vibecraft-icon.svg';
 
-const props = defineProps({
+defineProps({
   avatarUrl: {
     type: String,
     default: '',
@@ -23,23 +23,21 @@ const props = defineProps({
 });
 
 const { formatMessage } = useMessageFormatter();
-
-const containerClasses = computed(() => [
-  props.avatarUrl ? 'justify-between' : 'justify-end',
-]);
 </script>
 
 <template>
   <header
     class="header-expanded pt-6 pb-4 px-5 relative box-border w-full bg-transparent"
   >
-    <div class="flex items-start" :class="containerClasses">
-      <img
-        v-if="avatarUrl"
-        class="h-12 rounded-full"
-        :src="avatarUrl"
-        alt="Avatar"
-      />
+    <div class="flex items-center justify-between">
+      <div class="widget-header__brand-lockup flex items-center gap-2">
+        <img
+          class="widget-header__brand-mark widget-header__brand-mark--large"
+          :src="brandLogo"
+          :alt="$t('BUBBLE.BRAND_NAME')"
+        />
+        <span class="widget-header__brand-name">{{ $t('BUBBLE.BRAND_NAME') }}</span>
+      </div>
       <HeaderActions
         :show-popout-button="showPopoutButton"
         :show-end-conversation-button="false"

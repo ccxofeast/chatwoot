@@ -5,6 +5,7 @@ import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import HeaderActions from './HeaderActions.vue';
 import AvailabilityContainer from 'widget/components/Availability/AvailabilityContainer.vue';
 import { useAvailability } from 'widget/composables/useAvailability';
+import brandLogo from 'widget/assets/images/vibecraft-icon.svg';
 
 const props = defineProps({
   avatarUrl: { type: String, default: '' },
@@ -39,16 +40,18 @@ const onBackButtonClick = () => {
         />
       </button>
       <img
-        v-if="avatarUrl"
-        class="w-8 h-8 ltr:mr-3 rtl:ml-3 rounded-full"
-        :src="avatarUrl"
-        alt="avatar"
+        class="widget-header__brand-mark ltr:mr-3 rtl:ml-3"
+        :src="brandLogo"
+        :alt="$t('BUBBLE.BRAND_NAME')"
       />
       <div class="widget-header__details flex flex-col gap-1">
         <div
           class="widget-header__title flex items-center text-base font-medium leading-4 text-n-slate-12"
         >
-          <span v-dompurify-html="title" class="ltr:mr-1 rtl:ml-1" />
+          <span
+            v-dompurify-html="title || $t('BUBBLE.BRAND_NAME')"
+            class="ltr:mr-1 rtl:ml-1"
+          />
           <div
             :class="`h-2 w-2 rounded-full
               ${isOnline ? 'bg-n-teal-10' : 'hidden'}`"
