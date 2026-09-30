@@ -129,8 +129,6 @@ select:not(.reset-base) {
   --vc-surface: #f8fbfd;
   --vc-surface-raised: #ffffff;
   --vc-surface-muted: #eef4f7;
-  --vc-conversation: #edf4f7;
-  --vc-conversation-highlight: rgba(255, 255, 255, 0.96);
   --vc-input-surface: #ffffff;
   --vc-border: #cfdae1;
   --vc-border-soft: rgba(42, 69, 84, 0.14);
@@ -170,8 +168,6 @@ select:not(.reset-base) {
     --vc-surface: #1b2830;
     --vc-surface-raised: #24343d;
     --vc-surface-muted: #2a3b45;
-    --vc-conversation: #16232b;
-    --vc-conversation-highlight: rgba(255, 255, 255, 0.05);
     --vc-input-surface: #263740;
     --vc-border: #435762;
     --vc-border-soft: rgba(235, 235, 245, 0.13);
@@ -196,7 +192,7 @@ select:not(.reset-base) {
   }
 
   .conversation--container {
-    background: var(--vc-conversation);
+    background: transparent;
     scrollbar-color: var(--vc-border) transparent;
     scrollbar-width: thin;
   }
@@ -485,8 +481,8 @@ select:not(.reset-base) {
     color: var(--vc-text-muted);
     opacity: 1;
     text-decoration: none;
-    font-size: 0.6875rem;
-    font-weight: 550;
+    font-size: 0.8125rem;
+    font-weight: 600;
     letter-spacing: 0.025em;
     line-height: 1.4;
     transition:
@@ -513,7 +509,7 @@ select:not(.reset-base) {
   footer {
     border-top: 1px solid var(--vc-border-soft);
     background: var(--vc-surface);
-    padding: 0.5rem 0.625rem 0.625rem;
+    padding: 0.375rem 0.625rem 0.5rem;
   }
 
   footer > div:first-child {
