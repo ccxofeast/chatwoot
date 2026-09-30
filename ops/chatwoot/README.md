@@ -7,7 +7,7 @@ Chatwoot instance on `192.168.116.123`.
 
 Run this from the repository root on Windows. The command builds a Linux amd64
 image, copies it to the server, updates only the `rails` and `sidekiq` services,
-and checks `/health` before returning.
+and checks `/health` for up to three minutes before returning.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\ops\chatwoot\deploy-local.ps1

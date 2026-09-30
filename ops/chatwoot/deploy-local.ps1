@@ -88,8 +88,8 @@ sed -i -E "0,/^[[:space:]]+image: vibecraft\\/chatwoot:.*/s#^[[:space:]]+image:.
 docker-compose --env-file '__REMOTE_ENV__' -f "$compose_file" up -d rails sidekiq
 
 ready=0
-for attempt in $(seq 1 30); do
-  if curl --fail --silent http://127.0.0.1:3000/health >/dev/null; then
+for attempt in $(seq 1 90); do
+  if curl --fail --silent --max-time 5 http://127.0.0.1:3000/health >/dev/null; then
     ready=1
     break
   fi
