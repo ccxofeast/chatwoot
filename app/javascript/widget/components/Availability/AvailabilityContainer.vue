@@ -64,8 +64,8 @@ const headerText = computed(() =>
 </script>
 
 <template>
-  <div class="flex items-center justify-between gap-2">
-    <div class="flex flex-col gap-1">
+  <div class="flex min-w-0 items-center justify-between gap-2">
+    <div class="flex min-w-0 flex-col gap-1">
       <div
         v-if="showHeader"
         class="availability__title font-medium text-n-slate-12"

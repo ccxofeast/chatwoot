@@ -247,11 +247,17 @@ select:not(.reset-base) {
   }
 
   .widget-header__availability {
+    display: block;
+    min-block-size: 0.928125rem;
+    max-inline-size: 100%;
     color: var(--vc-text-subtle) !important;
     font-size: 0.6875rem;
     font-weight: 400;
     letter-spacing: 0;
     line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .widget-intro__title {
@@ -495,15 +501,22 @@ select:not(.reset-base) {
     }
   }
 
-  .branding--link img {
-    display: block;
+  .branding--mark {
+    display: inline-grid;
+    flex: 0 0 auto;
+    place-items: center;
     width: 1rem;
     height: 1rem;
     padding: 0.125rem;
     border: 1px solid var(--vc-border-soft);
     border-radius: 0.3125rem;
-    background: var(--vc-surface-raised);
-    object-fit: contain;
+    background: var(--vc-accent-soft);
+    color: var(--vc-accent);
+
+    > i {
+      width: 0.6875rem;
+      height: 0.6875rem;
+    }
   }
 
   footer {
