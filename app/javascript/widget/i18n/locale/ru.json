@@ -19,8 +19,8 @@
   },
   "TEAM_AVAILABILITY": {
     "ONLINE": "Мы в сети",
-    "OFFLINE": "В данный момент мы отсутствуем",
-    "BACK_AS_SOON_AS_POSSIBLE": "Мы вернемся как можно скорее"
+    "OFFLINE": "Команда поддержки сейчас недоступна",
+    "BACK_AS_SOON_AS_POSSIBLE": "Оставьте сообщение — мы скоро ответим"
   },
   "REPLY_TIME": {
     "IN_A_FEW_MINUTES": "Обычно отвечаем в течение нескольких минут",
@@ -57,7 +57,11 @@
   "BUBBLE": {
     "LABEL": "Пообщайтесь с нами"
   },
-  "POWERED_BY": "Работает на Chatwoot",
+  "LANGUAGE_SELECTOR": {
+    "LABEL": "Язык",
+    "ARIA_LABEL": "Выберите язык чата"
+  },
+  "POWERED_BY": "Команда поддержки vibecraft global",
   "EMAIL_PLACEHOLDER": "Пожалуйста, введите ваш email",
   "CHAT_PLACEHOLDER": "Введите сообщение",
   "TODAY": "Сегодня",

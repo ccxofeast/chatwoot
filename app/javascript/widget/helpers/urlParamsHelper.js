@@ -11,6 +11,11 @@ export const getLocale = (search = '') => {
   return new URLSearchParams(search).get('locale');
 };
 
+export const getWidgetLocaleStorageKey = () => {
+  const websiteToken = window.chatwootWebChannel?.websiteToken || 'default';
+  return `chatwoot-widget-locale:${websiteToken}`;
+};
+
 export const buildPopoutURL = ({
   origin,
   conversationCookie,

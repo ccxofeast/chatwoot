@@ -19,8 +19,8 @@
   },
   "TEAM_AVAILABILITY": {
     "ONLINE": "Nous sommes en ligne",
-    "OFFLINE": "Nous sommes absents pour le moment",
-    "BACK_AS_SOON_AS_POSSIBLE": "Nous serons de retour dès que possible"
+    "OFFLINE": "Notre équipe est momentanément absente",
+    "BACK_AS_SOON_AS_POSSIBLE": "Laissez-nous un message, nous vous répondrons bientôt"
   },
   "REPLY_TIME": {
     "IN_A_FEW_MINUTES": "Répond généralement en quelques minutes",
@@ -57,7 +57,11 @@
   "BUBBLE": {
     "LABEL": "Discutez avec nous"
   },
-  "POWERED_BY": "Propulsé par Chatwoot",
+  "LANGUAGE_SELECTOR": {
+    "LABEL": "Langue",
+    "ARIA_LABEL": "Choisir la langue du chat"
+  },
+  "POWERED_BY": "Équipe support vibecraft global",
   "EMAIL_PLACEHOLDER": "Veuillez saisir votre adresse de courriel",
   "CHAT_PLACEHOLDER": "Tapez votre message",
   "TODAY": "Aujourd'hui",

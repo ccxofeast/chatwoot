@@ -110,7 +110,7 @@ const formattedOpeningTime = computed(() => {
 </script>
 
 <template>
-  <span>
+  <span class="availability-text">
     <!-- 1. If currently in working hours, show reply time -->
     <template v-if="isInWorkingHours">
       {{ replyTimeMessage }}

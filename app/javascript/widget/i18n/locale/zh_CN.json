@@ -19,8 +19,8 @@
   },
   "TEAM_AVAILABILITY": {
     "ONLINE": "在线",
-    "OFFLINE": "当前已离线",
-    "BACK_AS_SOON_AS_POSSIBLE": "我们会尽快回复您"
+    "OFFLINE": "客服团队暂时离线",
+    "BACK_AS_SOON_AS_POSSIBLE": "留言后，我们会尽快回复您"
   },
   "REPLY_TIME": {
     "IN_A_FEW_MINUTES": "通常在几分钟内回复您",
@@ -57,7 +57,11 @@
   "BUBBLE": {
     "LABEL": "联系我们"
   },
-  "POWERED_BY": "vibecraft global 客服团队支持",
+  "LANGUAGE_SELECTOR": {
+    "LABEL": "语言",
+    "ARIA_LABEL": "选择聊天语言"
+  },
+  "POWERED_BY": "vibecraft global 客服团队",
   "EMAIL_PLACEHOLDER": "请输入您的电子邮件",
   "CHAT_PLACEHOLDER": "输入您的消息",
   "TODAY": "今天",

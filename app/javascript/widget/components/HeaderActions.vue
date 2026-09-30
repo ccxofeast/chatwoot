@@ -5,10 +5,11 @@ import { popoutChatWindow } from '../helpers/popoutHelper';
 import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import configMixin from 'widget/mixins/configMixin';
 import { CONVERSATION_STATUS } from 'shared/constants/messages';
+import LanguageSelector from './LanguageSelector.vue';
 
 export default {
   name: 'HeaderActions',
-  components: { FluentIcon },
+  components: { FluentIcon, LanguageSelector },
   mixins: [configMixin],
   props: {
     showPopoutButton: {
@@ -79,36 +80,39 @@ export default {
 
 <!-- eslint-disable-next-line vue/no-root-v-if -->
 <template>
-  <div v-if="showHeaderActions" class="actions flex items-center gap-3">
-    <button
-      v-if="
-        canLeaveConversation &&
-        canUserEndConversation &&
-        hasEndConversationEnabled &&
-        showEndConversationButton
-      "
-      class="button transparent compact"
-      :title="$t('END_CONVERSATION')"
-      @click="resolveConversation"
-    >
-      <FluentIcon icon="sign-out" size="22" class="text-n-slate-12" />
-    </button>
-    <button
-      v-if="showPopoutButton"
-      class="button transparent compact new-window--button"
-      @click="popoutWindow"
-    >
-      <FluentIcon icon="open" size="22" class="text-n-slate-12" />
-    </button>
-    <button
-      class="button transparent compact close-button"
-      :class="{
-        'rn-close-button': isRNWebView,
-      }"
-      @click="closeWindow"
-    >
-      <FluentIcon icon="dismiss" size="24" class="text-n-slate-12" />
-    </button>
+  <div class="actions flex items-center gap-2">
+    <LanguageSelector />
+    <template v-if="showHeaderActions">
+      <button
+        v-if="
+          canLeaveConversation &&
+          canUserEndConversation &&
+          hasEndConversationEnabled &&
+          showEndConversationButton
+        "
+        class="button transparent compact"
+        :title="$t('END_CONVERSATION')"
+        @click="resolveConversation"
+      >
+        <FluentIcon icon="sign-out" size="22" class="text-n-slate-12" />
+      </button>
+      <button
+        v-if="showPopoutButton"
+        class="button transparent compact new-window--button"
+        @click="popoutWindow"
+      >
+        <FluentIcon icon="open" size="22" class="text-n-slate-12" />
+      </button>
+      <button
+        class="button transparent compact close-button"
+        :class="{
+          'rn-close-button': isRNWebView,
+        }"
+        @click="closeWindow"
+      >
+        <FluentIcon icon="dismiss" size="24" class="text-n-slate-12" />
+      </button>
+    </template>
   </div>
 </template>
 

@@ -4,7 +4,10 @@ import { setHeader } from 'widget/helpers/axios';
 import addHours from 'date-fns/addHours';
 import { IFrameHelper, RNHelper } from 'widget/helpers/utils';
 import configMixin from './mixins/configMixin';
-import { getLocale } from './helpers/urlParamsHelper';
+import {
+  getLocale,
+  getWidgetLocaleStorageKey,
+} from './helpers/urlParamsHelper';
 import { getLanguageDirection } from 'dashboard/components/widgets/conversation/advancedFilterItems/languages';
 import { isEmptyObject } from 'widget/helpers/utils';
 import Spinner from 'shared/components/Spinner.vue';
@@ -91,7 +94,13 @@ export default {
   },
   mounted() {
     const { websiteToken, locale, widgetColor } = window.chatwootWebChannel;
-    this.setLocale(locale);
+    const preferredLocale = this.getStoredLocale();
+    const hasAppliedPreferredLocale = preferredLocale
+      ? this.setLocale(preferredLocale)
+      : false;
+    if (!hasAppliedPreferredLocale) {
+      this.setLocale(locale);
+    }
     this.setWidgetColor(widgetColor);
     this.setWidgetColorVariable(widgetColor);
     setHeader(window.authToken);
@@ -155,7 +164,7 @@ export default {
       });
     },
     setLocale(localeWithVariation) {
-      if (!localeWithVariation) return;
+      if (!localeWithVariation) return false;
       const { enabledLanguages } = window.chatwootWebChannel;
       const localeWithoutVariation = localeWithVariation.split('_')[0];
       const hasLocaleWithoutVariation = enabledLanguages.some(
@@ -167,8 +176,20 @@ export default {
 
       if (hasLocaleWithVariation) {
         this.$root.$i18n.locale = localeWithVariation;
+        document.documentElement.lang = localeWithVariation.replace('_', '-');
+        return true;
       } else if (hasLocaleWithoutVariation) {
         this.$root.$i18n.locale = localeWithoutVariation;
+        document.documentElement.lang = localeWithoutVariation;
+        return true;
+      }
+      return false;
+    },
+    getStoredLocale() {
+      try {
+        return window.localStorage.getItem(getWidgetLocaleStorageKey());
+      } catch (error) {
+        return null;
       }
     },
     registerUnreadEvents() {
@@ -275,7 +296,7 @@ export default {
         }
         const message = IFrameHelper.getMessage(e);
         if (message.event === 'config-set') {
-          this.setLocale(message.locale);
+          this.setLocale(this.getStoredLocale() || message.locale);
           this.setBubbleLabel();
           this.fetchOldConversations().then(() => this.setUnreadView());
           this.fetchAvailableAgents(websiteToken);

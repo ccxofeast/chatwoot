@@ -44,9 +44,9 @@ const onBackButtonClick = () => {
         :src="avatarUrl"
         alt="avatar"
       />
-      <div class="flex flex-col gap-1">
+      <div class="widget-header__details flex flex-col gap-1">
         <div
-          class="flex items-center text-base font-medium leading-4 text-n-slate-12"
+          class="widget-header__title flex items-center text-base font-medium leading-4 text-n-slate-12"
         >
           <span v-dompurify-html="title" class="ltr:mr-1 rtl:ml-1" />
           <div
@@ -58,7 +58,7 @@ const onBackButtonClick = () => {
           :agents="availableAgents"
           :show-header="false"
           :show-avatars="false"
-          text-classes="text-xs leading-3"
+          text-classes="widget-header__availability"
         />
       </div>
     </div>
