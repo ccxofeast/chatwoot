@@ -1,5 +1,5 @@
 <script setup>
-import { toRef } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref, toRef } from 'vue';
 import { useRouter } from 'vue-router';
 import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import HeaderActions from './HeaderActions.vue';
@@ -16,6 +16,54 @@ const props = defineProps({
 });
 
 const availableAgents = toRef(props, 'availableAgents');
+const availabilitySlot = ref(null);
+
+const AVAILABILITY_MAX_LINES = 2;
+const AVAILABILITY_LINE_HEIGHT = 1.35;
+const AVAILABILITY_BASE_FONT_SIZE = 10;
+const AVAILABILITY_MIN_FONT_SIZE = 7;
+
+let resizeObserver;
+let mutationObserver;
+let fitFrame;
+
+const fitAvailabilityText = () => {
+  if (fitFrame) cancelAnimationFrame(fitFrame);
+
+  fitFrame = requestAnimationFrame(() => {
+    const node = availabilitySlot.value?.querySelector(
+      '.widget-header__availability'
+    );
+    if (!node || !node.clientWidth) return;
+
+    // Measure the un-clamped text, then restore the fixed two-line presentation.
+    node.style.display = 'block';
+    node.style.overflow = 'visible';
+    node.style.webkitLineClamp = 'unset';
+    node.style.minBlockSize = '0';
+    node.style.blockSize = 'auto';
+
+    let fontSize = AVAILABILITY_BASE_FONT_SIZE;
+    node.style.fontSize = `${fontSize}px`;
+    node.style.lineHeight = `${fontSize * AVAILABILITY_LINE_HEIGHT}px`;
+
+    while (
+      node.scrollHeight >
+        AVAILABILITY_MAX_LINES * fontSize * AVAILABILITY_LINE_HEIGHT &&
+      fontSize > AVAILABILITY_MIN_FONT_SIZE
+    ) {
+      fontSize -= 0.25;
+      node.style.fontSize = `${fontSize}px`;
+      node.style.lineHeight = `${fontSize * AVAILABILITY_LINE_HEIGHT}px`;
+    }
+
+    node.style.removeProperty('display');
+    node.style.removeProperty('overflow');
+    node.style.removeProperty('-webkit-line-clamp');
+    node.style.removeProperty('min-block-size');
+    node.style.removeProperty('block-size');
+  });
+};
 
 const router = useRouter();
 const { isOnline } = useAvailability(availableAgents);
@@ -23,6 +71,30 @@ const { isOnline } = useAvailability(availableAgents);
 const onBackButtonClick = () => {
   router.replace({ name: 'home' });
 };
+
+onMounted(() => {
+  nextTick(fitAvailabilityText);
+
+  if (typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver(fitAvailabilityText);
+    if (availabilitySlot.value) resizeObserver.observe(availabilitySlot.value);
+  }
+
+  mutationObserver = new MutationObserver(fitAvailabilityText);
+  if (availabilitySlot.value) {
+    mutationObserver.observe(availabilitySlot.value, {
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
+  }
+});
+
+onBeforeUnmount(() => {
+  if (fitFrame) cancelAnimationFrame(fitFrame);
+  resizeObserver?.disconnect();
+  mutationObserver?.disconnect();
+});
 </script>
 
 <template>
@@ -57,7 +129,7 @@ const onBackButtonClick = () => {
               ${isOnline ? 'bg-n-teal-10' : 'hidden'}`"
           />
         </div>
-        <div class="widget-header__availability-slot">
+        <div ref="availabilitySlot" class="widget-header__availability-slot">
           <AvailabilityContainer
             :agents="availableAgents"
             :show-header="false"
