@@ -4,7 +4,8 @@ param(
     [string]$SshUser = "root",
     [int]$SshPort = 22,
     [string]$SshKey = "$env:USERPROFILE\.ssh\id_ed25519_vm100",
-    [switch]$NoCache
+    [switch]$NoCache,
+    [switch]$Compress
 )
 
 Set-StrictMode -Version Latest
@@ -33,6 +34,9 @@ $image = "vibecraft/chatwoot:$imageTag"
 $batch = Join-Path ([IO.Path]::GetTempPath()) ("chatwoot-local-" + [guid]::NewGuid().ToString("N"))
 $imageArchive = Join-Path $batch "chatwoot.tar"
 $compressedArchive = Join-Path $batch "chatwoot.tar.gz"
+$archivePath = $imageArchive
+$archiveName = "chatwoot.tar"
+$archiveMode = "uncompressed"
 $readme = Join-Path $root "ops\chatwoot\README.md"
 $remote = "$SshUser@$Server"
 $remoteDir = "/tmp/chatwoot-local-$timestamp"
@@ -73,15 +77,20 @@ try {
 
     $stageStarted = Get-Date
     Invoke-Native "docker" @("save", "-o", $imageArchive, $image)
-    Invoke-Native "tar.exe" @("-czf", $compressedArchive, "-C", $batch, "chatwoot.tar")
-    Remove-Item -LiteralPath $imageArchive -Force
-    $archiveMegabytes = (Get-Item -LiteralPath $compressedArchive).Length / 1MB
+    if ($Compress) {
+        Invoke-Native "tar.exe" @("-czf", $compressedArchive, "-C", $batch, "chatwoot.tar")
+        Remove-Item -LiteralPath $imageArchive -Force
+        $archivePath = $compressedArchive
+        $archiveName = "chatwoot.tar.gz"
+        $archiveMode = "gzip"
+    }
+    $archiveMegabytes = (Get-Item -LiteralPath $archivePath).Length / 1MB
     $packageSeconds = ((Get-Date) - $stageStarted).TotalSeconds
 
-    Write-Host "Transferring image to $remote ..."
+    Write-Host "Transferring $archiveName and README to $remote ..."
     $stageStarted = Get-Date
     Invoke-Native "ssh" ($sshArgs + @($remote, "mkdir -p '$remoteDir'"))
-    Invoke-Native "scp" ($scpArgs + @($compressedArchive, $readme, ($remote + ":" + $remoteDir + "/")))
+    Invoke-Native "scp" ($scpArgs + @($archivePath, $readme, ($remote + ":" + $remoteDir + "/")))
     $transferSeconds = ((Get-Date) - $stageStarted).TotalSeconds
 
     $remoteScript = @'
@@ -90,17 +99,25 @@ compose_file='__REMOTE_COMPOSE__'
 backup_file=$(printf '%s.bak-%s' "$compose_file" '__IMAGE_TAG__')
 tmp_dir='__REMOTE_DIR__'
 image='__IMAGE__'
+archive_name='__ARCHIVE_NAME__'
 
 test -r '__REMOTE_ENV__'
 test -r "$compose_file"
 cp -p "$compose_file" "$backup_file"
-tar -xzf "$tmp_dir/chatwoot.tar.gz" -C "$tmp_dir"
+load_started=$(date +%s)
+if [ "$archive_name" = "chatwoot.tar.gz" ]; then
+  tar -xzf "$tmp_dir/$archive_name" -C "$tmp_dir"
+fi
 docker load < "$tmp_dir/chatwoot.tar"
+load_seconds=$(( $(date +%s) - load_started ))
 
 sed -i -E "0,/^[[:space:]]+image: vibecraft\\/chatwoot:.*/s#^[[:space:]]+image:.*#    image: $image#" "$compose_file"
+recreate_started=$(date +%s)
 docker-compose --env-file '__REMOTE_ENV__' -f "$compose_file" up -d rails sidekiq
+recreate_seconds=$(( $(date +%s) - recreate_started ))
 
 ready=0
+health_started=$(date +%s)
 for attempt in $(seq 1 90); do
   if curl --fail --silent --max-time 5 http://127.0.0.1:3000/health >/dev/null; then
     ready=1
@@ -108,6 +125,7 @@ for attempt in $(seq 1 90); do
   fi
   sleep 2
 done
+health_seconds=$(( $(date +%s) - health_started ))
 
 if [ "$ready" -ne 1 ]; then
   cp -p "$backup_file" "$compose_file"
@@ -118,6 +136,7 @@ if [ "$ready" -ne 1 ]; then
 fi
 
 install -m 0644 "$tmp_dir/README.md" /opt/chatwoot/README.md
+echo "Server timing: load=${load_seconds}s recreate=${recreate_seconds}s health=${health_seconds}s"
 docker-compose --env-file '__REMOTE_ENV__' -f "$compose_file" ps
 docker inspect chatwoot-rails-1 --format 'running_image={{.Config.Image}}'
 rm -rf "$tmp_dir"
@@ -127,6 +146,7 @@ rm -rf "$tmp_dir"
     $remoteScript = $remoteScript.Replace("__REMOTE_DIR__", $remoteDir)
     $remoteScript = $remoteScript.Replace("__IMAGE_TAG__", $imageTag)
     $remoteScript = $remoteScript.Replace("__IMAGE__", $image)
+    $remoteScript = $remoteScript.Replace("__ARCHIVE_NAME__", $archiveName)
 
     Write-Host "Rolling out $image ..."
     $stageStarted = Get-Date
@@ -138,7 +158,7 @@ rm -rf "$tmp_dir"
     $totalSeconds = ((Get-Date) - $releaseStarted).TotalSeconds
 
     Write-Host "Chatwoot deployment completed: $image"
-    Write-Host ("Timing: build={0:n1}s package={1:n1}s transfer={2:n1}s server={3:n1}s total={4:n1}s archive={5:n1}MB" -f $buildSeconds, $packageSeconds, $transferSeconds, $serverSeconds, $totalSeconds, $archiveMegabytes)
+    Write-Host ("Timing: build={0:n1}s package={1:n1}s transfer={2:n1}s server={3:n1}s total={4:n1}s archive={5:n1}MB mode={6}" -f $buildSeconds, $packageSeconds, $transferSeconds, $serverSeconds, $totalSeconds, $archiveMegabytes, $archiveMode)
 }
 finally {
     if (Test-Path -LiteralPath $batch) {
