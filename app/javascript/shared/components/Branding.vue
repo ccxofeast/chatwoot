@@ -53,7 +53,7 @@ export default {
 <template>
   <div
     v-if="globalConfig.brandName && !disableBranding"
-    class="px-0 py-1 flex justify-center"
+    class="px-0 py-0.5 flex justify-center"
   >
     <a
       :href="brandRedirectURL"

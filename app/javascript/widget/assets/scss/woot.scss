@@ -233,6 +233,12 @@ select:not(.reset-base) {
     min-width: 0;
   }
 
+  .widget-header__availability-slot {
+    block-size: 0.928125rem;
+    min-block-size: 0.928125rem;
+    overflow: hidden;
+  }
+
   .widget-header__title {
     color: var(--vc-text) !important;
     font-size: 0.875rem;
@@ -490,7 +496,7 @@ select:not(.reset-base) {
     font-size: 0.8125rem;
     font-weight: 600;
     letter-spacing: 0.025em;
-    line-height: 1.4;
+    line-height: 1.2;
     transition:
       color 160ms ease,
       opacity 160ms ease;

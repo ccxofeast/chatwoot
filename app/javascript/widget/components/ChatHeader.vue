@@ -57,12 +57,14 @@ const onBackButtonClick = () => {
               ${isOnline ? 'bg-n-teal-10' : 'hidden'}`"
           />
         </div>
-        <AvailabilityContainer
-          :agents="availableAgents"
-          :show-header="false"
-          :show-avatars="false"
-          text-classes="widget-header__availability"
-        />
+        <div class="widget-header__availability-slot">
+          <AvailabilityContainer
+            :agents="availableAgents"
+            :show-header="false"
+            :show-avatars="false"
+            text-classes="widget-header__availability"
+          />
+        </div>
       </div>
     </div>
     <HeaderActions :show-popout-button="showPopoutButton" />
