@@ -234,8 +234,8 @@ select:not(.reset-base) {
   }
 
   .widget-header__availability-slot {
-    block-size: 1.75rem;
-    min-block-size: 1.75rem;
+    block-size: 2.25rem;
+    min-block-size: 2.25rem;
     overflow: hidden;
   }
 
@@ -254,16 +254,16 @@ select:not(.reset-base) {
 
   .widget-header__availability {
     display: -webkit-box;
-    min-block-size: 1.75rem;
+    min-block-size: 2.25rem;
     max-inline-size: 100%;
     color: var(--vc-text-subtle) !important;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     font-weight: 400;
     letter-spacing: 0;
     line-height: 1.35;
     overflow: hidden;
     overflow-wrap: anywhere;
-    text-wrap: pretty;
+    text-wrap: balance;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
   }

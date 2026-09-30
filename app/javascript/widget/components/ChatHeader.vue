@@ -20,8 +20,8 @@ const availabilitySlot = ref(null);
 
 const AVAILABILITY_MAX_LINES = 2;
 const AVAILABILITY_LINE_HEIGHT = 1.35;
-const AVAILABILITY_BASE_FONT_SIZE = 10;
-const AVAILABILITY_MIN_FONT_SIZE = 7;
+const AVAILABILITY_BASE_FONT_SIZE = 12;
+const AVAILABILITY_MIN_FONT_SIZE = 10.5;
 
 let resizeObserver;
 let mutationObserver;
